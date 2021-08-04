@@ -12,12 +12,12 @@ const users = [];
 
 function checksExistsUserAccount(request, response, next) {
   // TODO: check user midleware
-  const { id } = request.body;
+  const { username } = request.body;
 
-  const foundUser = users.find((user) => user.id === id);
+  const foundUser = users.find((user) => user.username === username);
 
   if (foundUser)
-    return response.status(403).json({ message: "user already exists" });
+    return response.status(400).json({ error: "username already in use" });
 
   next();
 }
@@ -31,13 +31,15 @@ app.post("/users", checksExistsUserAccount, (request, response) => {
     name: 'Danilo Vieira', 
     username: 'danilo', 
     todos: []
-  }
+  } 
   */
 
-  const { id, name, username, todos } = request.body;
+  const { name, username } = request.body;
 
-  users.push({ id, name, username, todos });
-  return response.json({ id, name, username, todos });
+  const id = uuidv4();
+
+  users.push({ id, name, username, todos: [] });
+  return response.status(201).json({ id, name, username, todos: [] });
 });
 
 app.get("/todos", checksExistsUserAccount, (request, response) => {
