@@ -29,8 +29,8 @@ app.post("/users", (request, response) => {
   const id = uuidv4();
   const todos = [];
 
-  users.push({ id, name, username, todos });
-  return response.json({ id, name, username, todos });
+  users.push({ id, name, username, todos: [] });
+  return response.status(201).json({ id, name, username, todos: [] });
 });
 
 app.get("/todos", checksExistsUserAccount, (request, response) => {
